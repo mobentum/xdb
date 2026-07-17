@@ -8,9 +8,9 @@ xdb has three test tiers, each with a different dependency profile.
 go test ./... -count=1
 ```
 
-- **286 tests**
+- **294 tests** (no build tag)
 - No external dependencies
-- Test the builder chain methods, predicate rendering, placeholder formatting, immutability, and error wrapping
+- Test the builder chain methods, predicate rendering, placeholder formatting, immutability, error wrapping, window functions, UNION/INTERSECT/EXCEPT, and JSONB/array operators
 - Run on every `make test`
 
 ## Tier 2: sqlmock integration tests
@@ -25,10 +25,10 @@ or:
 make test-integration
 ```
 
-- **35 tests** in `tests/db_integration_test.go`
+- **33 tests** in `db_integration_test.go` (module root, build tag: `integration`)
 - Uses `github.com/DATA-DOG/go-sqlmock` to simulate a PostgreSQL driver
 - Verifies actual SQL generation against expected patterns: placeholders, column order, clause ordering
-- Covers: SELECT (One, All, Count, Exists, Each), INSERT (Exec, One), UPDATE (Exec, ExecMustAffect, One), DELETE (Exec, ExecMustAffect), transactions (commit, rollback, panic recovery), raw SQL helpers, pagination, CTE
+- Covers: SELECT (One, All, Count, Exists, Each), INSERT (Exec, One), UPDATE (Exec, ExecMustAffect, One), DELETE (Exec, ExecMustAffect), transactions (commit, rollback, panic recovery), raw SQL helpers, pagination (Paginate + PaginateWithCount), CTE
 - Included in `make verify` alongside unit tests
 
 ## Tier 3: Real database tests
@@ -57,19 +57,20 @@ make docker-down
 ## Coverage
 
 ```
-go test ./... -tags=integration -coverprofile=coverage.out
+go test -count=1 -tags=integration -coverprofile=coverage.out .
 go tool cover -func=coverage.out
 ```
 
-Current: **~87%** statement coverage across all tiers.
+Current: **86.8%** statement coverage.
 
 | Package | Files | Coverage |
 |---|---|---|
-| Root (xdb) | predicate.go, sqlbuilder.go, db.go, select.go, mutate.go, tx.go, lock.go, cte.go, page.go, migrate.go, errors.go, dialect.go | ~87% |
-| Tests | sqlmock + realdb | N/A (test code excluded) |
+| Root (xdb) | predicate.go, sqlbuilder.go, db.go, select.go, mutate.go, tx.go, lock.go, cte.go, page.go, migrate.go, errors.go, dialect.go | 86.8% |
+
+Remaining uncovered lines are real-DB-only (`New`, `Ping`, `Migrate*`) or intentionally unexported (`forKeyShare`).
 
 ## Example functions
 
-`example_test.go` contains **18 Example functions** that are compiled and run as part of `go test`. They demonstrate every major API surface using `xdb.Wrap(&sqlx.DB{})` (no real connection needed) and verify the generated SQL and args match expected output.
+`example_test.go` contains **53 Example functions** that are compiled and verified by `go test`. They demonstrate every major API surface using `xdb.Wrap(&sqlx.DB{})` (no real connection needed) and verify the generated SQL and args match expected output.
 
 These examples also appear in the `go doc` output and on `pkg.go.dev`.
