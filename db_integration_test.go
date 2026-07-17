@@ -602,7 +602,7 @@ func TestIntegration_CTE(t *testing.T) {
 		Total  int    `db:"total"`
 	}
 	var results []Result
-	err := d.WithCTE().
+	err := d.CTE().
 		WithCTE("regional", "SELECT region, SUM(amount) AS total FROM cte_orders GROUP BY region").
 		Select("region", "total").
 		From("regional").

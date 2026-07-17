@@ -93,7 +93,7 @@ result, _ := xdb.Paginate[Post](ctx, db.Select("id", "title").From("posts"), Pag
 db.Select("*").From("orders").Lock(ForUpdate().SkipLocked()).All(ctx, &orders)
 
 // CTE
-db.WithCTE().WithCTE("recent", `SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '7 days'`).
+db.CTE().WithCTE("recent", `SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '7 days'`).
     Select("id", "total").From("recent").All(ctx, &results)
 
 // Migrations

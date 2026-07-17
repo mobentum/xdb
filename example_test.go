@@ -635,7 +635,7 @@ func Example_join_m2n_cross() {
 // 10% by revenue. CTEs are defined with WithCTE(name, rawSQL).
 func Example_cte_raw() {
 	db := exampleDB()
-	sql, _, _ := db.WithCTE().
+	sql, _, _ := db.CTE().
 		WithCTE("regional_sales", "SELECT region, SUM(amount) AS total_sales FROM orders GROUP BY region").
 		WithCTE("top_regions", "SELECT region FROM regional_sales WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)").
 		Select("region", "product", "SUM(quantity) AS product_units", "SUM(amount) AS product_sales").
@@ -658,7 +658,7 @@ func Example_cte_select_builder() {
 		From("users").
 		Where(xdb.Cond.Eq("status", "active"))
 
-	sql, _, _ := db.WithCTE().
+	sql, _, _ := db.CTE().
 		WithSelectCTE("active_users", activeCTE).
 		Select("u.id AS user_id", "u.name AS user_name").
 		From("active_users u").
@@ -674,7 +674,7 @@ func Example_cte_select_builder() {
 // complex data processing without subquery nesting.
 func Example_cte_multi_stage() {
 	db := exampleDB()
-	sql, _, _ := db.WithCTE().
+	sql, _, _ := db.CTE().
 		WithCTE("sales_by_category", "SELECT category, SUM(amount) AS total FROM sales WHERE date >= NOW() - INTERVAL '90 days' GROUP BY category").
 		WithCTE("ranked_categories", "SELECT category, total, ROW_NUMBER() OVER (ORDER BY total DESC) AS rank FROM sales_by_category").
 		Select("category", "total", "rank").

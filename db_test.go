@@ -69,7 +69,7 @@ func TestDB_Delete_Returns_DeleteBuilder(t *testing.T) {
 func TestDB_WithCTE_Returns_CTEBuilder(t *testing.T) {
 	db := &sqlx.DB{}
 	wrapped := Wrap(db)
-	cte := wrapped.WithCTE()
+	cte := wrapped.CTE()
 	assert.NotNil(t, cte.ctes)
 	assert.Empty(t, cte.ctes)
 }

@@ -178,8 +178,9 @@ func (d *DB) Select(cols ...string) SelectBuilder {
 	return SelectBuilder{ec: d.ec(), data: selectData{columns: cols}}
 }
 
-// WithCTE starts a CTE builder to define Common Table Expressions.
-func (d *DB) WithCTE() CTEBuilder {
+// CTE starts a CTE builder to define Common Table Expressions.
+// Chain WithCTE calls to add CTEs, then call Select to begin the query.
+func (d *DB) CTE() CTEBuilder {
 	return CTEBuilder{ec: d.ec(), ctes: []CTE{}}
 }
 
