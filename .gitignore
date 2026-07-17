@@ -1,0 +1,27 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.prof
+*.test
+vendor/
+
+# Build
+dist/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Data
+*.db
+
+# Coverage
+coverage.out

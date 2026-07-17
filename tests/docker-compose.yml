@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: xdb
+      POSTGRES_PASSWORD: xdb
+      POSTGRES_DB: xdb_test
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xdb -d xdb_test"]
+      interval: 3s
+      timeout: 2s
+      retries: 5
