@@ -3,7 +3,7 @@ module github.com/mobentum/xdb/examples/addressbook
 go 1.26.5
 
 require (
-	github.com/mobentum/kern v0.1.2
+	github.com/mobentum/kern v0.1.3
 	github.com/mobentum/xdb v0.1.0
 )
 
